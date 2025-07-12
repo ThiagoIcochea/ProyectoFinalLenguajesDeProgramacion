@@ -42,14 +42,8 @@ class VistaRegistrarSolicitud:
             messagebox.showerror("Error", "Producto no válido.")
             return
 
-        solicitud = Solicitud(
-            empleado=self.usuario.get_username(),
-            producto=codigo,
-            cantidad=cantidad,
-            estado="pendiente",
-            fecha=datetime.now()
-        )
+       
 
-        self.controlador_solicitud.registrar_solicitud(solicitud)
+        self.controlador_solicitud.registrar_solicitud(self.usuario.get_username(),producto,cantidad,"pendiente",datetime.now())
         messagebox.showinfo("Éxito", "Solicitud registrada exitosamente.")
         self.top.destroy()
