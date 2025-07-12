@@ -5,11 +5,11 @@ from Controladoras.ControladorMovimiento import ControladorMovimiento
 from Controladoras.ControladorSolicitud import ControladorSolicitud
 
 class VistaMenu:
-    def __init__(self, usuario, controlador_usuario):
+    def __init__(self, usuario, controlador_usuario,controlador_producto,controlador_movimiento):
         self.usuario = usuario
         self.controlador_usuario = controlador_usuario
-        self.controlador_producto = ControladorProducto()
-        self.controlador_movimiento = ControladorMovimiento()
+        self.controlador_producto = controlador_producto
+        self.controlador_movimiento = controlador_movimiento
         self.controlador_solicitud = ControladorSolicitud()
 
         self.crearProductos()
@@ -76,7 +76,7 @@ class VistaMenu:
 
     def ver_productos(self):
         from Vistas.VistaVerProductos import VistaVerProductos
-        VistaVerProductos(self.root, self.controlador_producto.listar_productos())
+        VistaVerProductos(self.root, self.controlador_producto)
 
     def editar_stock(self):
         from Vistas.VistaEditarStock import VistaEditarStock
@@ -96,7 +96,7 @@ class VistaMenu:
 
     def ver_movimientos(self):
         from Vistas.VistaVerMovimientos import VistaVerMovimientos
-        VistaVerMovimientos(self.root, self.controlador_movimiento.listar_movimientos())
+        VistaVerMovimientos(self.root, self.controlador_movimiento)
 
     def reporte_stock(self):
         from Vistas.VistaReporteStock import VistaReporteStock
@@ -110,7 +110,7 @@ class VistaMenu:
         self.root.destroy()
         from Vistas.VistaLogin import VistaLogin
         tk_root = tk.Tk()
-        VistaLogin(tk_root, self.controlador_usuario)
+        VistaLogin(tk_root, self.controlador_usuario,self.controlador_producto,self.controlador_movimiento)
         tk_root.mainloop()
 
     def crearProductos(self):
