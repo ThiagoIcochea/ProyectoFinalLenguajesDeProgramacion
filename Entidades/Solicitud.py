@@ -1,10 +1,16 @@
 class Solicitud:
-    def __init__(self, empleado, producto, cantidad, estado, fecha):
+    def __init__(self, id, empleado, producto, cantidad, estado, fecha):
         self.__empleado = empleado     
         self.__producto = producto     
         self.__cantidad = cantidad
         self.__estado = estado          
         self.__fecha = fecha
+        self.__id = id
+
+    def get_id(self):
+        return self.__id
+    def set_id(self, id):
+        self.__id = id
 
     def get_empleado(self):
         return self.__empleado

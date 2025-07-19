@@ -5,12 +5,12 @@ from Controladoras.ControladorMovimiento import ControladorMovimiento
 from Controladoras.ControladorSolicitud import ControladorSolicitud
 
 class VistaMenu:
-    def __init__(self, usuario, controlador_usuario,controlador_producto,controlador_movimiento):
+    def __init__(self, usuario, controlador_usuario, controlador_producto, controlador_movimiento,controlador_solicitudes):
         self.usuario = usuario
         self.controlador_usuario = controlador_usuario
         self.controlador_producto = controlador_producto
         self.controlador_movimiento = controlador_movimiento
-        self.controlador_solicitud = ControladorSolicitud()
+        self.controlador_solicitud = controlador_solicitudes
 
         self.crearProductos()
 
@@ -59,10 +59,17 @@ class VistaMenu:
             menu_reportes.add_command(label="Reporte de Stock", command=self.reporte_stock)
             menu_bar.add_cascade(label="Reportes", menu=menu_reportes)
 
+            menu_sol_resp = Menu(menu_bar, tearoff=0)
+            menu_sol_resp.add_command(label="Gestionar solicitudes", command=self.gestionar_solicitudes)
+            menu_sol_resp.add_command(label="Ver solicitudes", command=self.ver_solicitudes)
+            menu_bar.add_cascade(label="Solicitudes", menu=menu_sol_resp)
+
         if rol == "empleado":
-            menu_sol = Menu(menu_bar, tearoff=0)
-            menu_sol.add_command(label="Solicitar producto", command=self.solicitar_producto)
-            menu_bar.add_cascade(label="Solicitudes", menu=menu_sol)
+            menu_sol_emp = Menu(menu_bar, tearoff=0)
+            menu_sol_emp.add_command(label="Solicitar producto", command=self.solicitar_producto)
+            menu_sol_emp.add_command(label="Ver solicitudes", command=self.ver_solicitudes)
+            menu_bar.add_cascade(label="Solicitudes", menu=menu_sol_emp)
+            
 
         menu_usuario = Menu(menu_bar, tearoff=0)
         menu_usuario.add_command(label="Cerrar sesión", command=self.cerrar_sesion)
@@ -106,11 +113,19 @@ class VistaMenu:
         from Vistas.VistaRegistrarSolicitud import VistaRegistrarSolicitud
         VistaRegistrarSolicitud(self.root, self.controlador_producto, self.controlador_solicitud, self.usuario)
 
+    def gestionar_solicitudes(self):
+        from Vistas.VistaGestionarSolicitudes import VistaGestionarSolicitudes
+        VistaGestionarSolicitudes(self.root, self.controlador_solicitud)
+
+    def ver_solicitudes(self):
+        from Vistas.VistaVerSolicitudes import VistaVerSolicitudes
+        VistaVerSolicitudes(self.root, self.controlador_solicitud, self.usuario)
+
     def cerrar_sesion(self):
         self.root.destroy()
         from Vistas.VistaLogin import VistaLogin
         tk_root = tk.Tk()
-        VistaLogin(tk_root, self.controlador_usuario,self.controlador_producto,self.controlador_movimiento)
+        VistaLogin(tk_root, self.controlador_usuario, self.controlador_producto, self.controlador_movimiento, self.controlador_solicitud)
         tk_root.mainloop()
 
     def crearProductos(self):

@@ -2,6 +2,7 @@ import tkinter as tk
 from Controladoras.ControladorUsuario import ControladorUsuario
 from Controladoras.ControladorProducto import ControladorProducto
 from Controladoras.ControladorMovimiento import ControladorMovimiento
+from Controladoras.ControladorSolicitud import ControladorSolicitud
 from Vistas.VistaLogin import VistaLogin
 
 def main():
@@ -9,6 +10,7 @@ def main():
     controlador_usuarios = ControladorUsuario()
     controlador_producto = ControladorProducto()
     controlador_movimiento = ControladorMovimiento()
+    controlador_solicitudes = ControladorSolicitud()
    
 
   
@@ -18,7 +20,7 @@ def main():
 
     
     root = tk.Tk()
-    login_app = VistaLogin(root, controlador_usuarios,controlador_producto,controlador_movimiento)
+    login_app = VistaLogin(root, controlador_usuarios,controlador_producto,controlador_movimiento, controlador_solicitudes)
     root.mainloop()
 
 if __name__ == "__main__":
