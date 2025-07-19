@@ -5,14 +5,14 @@ from Utils.Seguridad import verificar_password
 from Vistas.VistaMenu import VistaMenu
 
 class VistaLogin:
-    def __init__(self, master, controlador_usuario,controlador_producto, controlador_movimiento):
+    def __init__(self, master, controlador_usuarios,controlador_producto, controlador_movimiento):
         self.master = master
         self.master.title("Login de Biblioteca")
         self.master.geometry("600x300")
         self.master.configure(bg="#f5f6fa")
-        self.controlador = controlador_usuario
-        self.controlador_producto = controlador_producto
-        self.controlador_movimiento = controlador_movimiento
+        self.controladorU = controlador_usuarios
+        self.controladorP = controlador_producto
+        self.controladorM = controlador_movimiento
 
         # Frame principal dividido en dos secciones
         self.frame_left = tk.Frame(master, bg="#ffffff", width=300, height=300)
@@ -50,11 +50,11 @@ class VistaLogin:
     def login(self):
         username = self.entry_usuario.get()
         password = self.entry_password.get()
-        usuario = self.controlador.obtener_usuario(username)
+        usuario = self.controladorU.obtener_usuario(username)
 
         if usuario and verificar_password(password, usuario.get_password()):
             messagebox.showinfo("Éxito", f"Bienvenido {usuario.get_nombre()} ({usuario.get_rol()})")
             self.master.destroy()
-            VistaMenu(usuario, self.controlador)
+            VistaMenu(usuario, self.controladorU,self.controladorP, self.controladorM)
         else:
             messagebox.showerror("Error", "Usuario o contraseña incorrectos")
