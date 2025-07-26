@@ -388,4 +388,4 @@ class VistaAgregarUsuario:
         btn.bind("<Enter>", lambda e: btn.config(bg=COLORES["accent_dark"]))
         btn.bind("<Leave>", lambda e: btn.config(bg=COLORES["accent"]))
         
-        return btn
+        return btn  
