@@ -6,7 +6,7 @@ import unittest
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from Controladoras.ControladorProducto import ControladorProducto
-from Entidades.Producto import Producto
+
 
 class TestControladorProducto(unittest.TestCase):
 

@@ -75,6 +75,7 @@ class VistaEditarUsuario:
         )
         self.combo_usuarios.pack(fill="x", padx=1, pady=1)
         self.combo_usuarios.bind("<<ComboboxSelected>>", self.cargar_datos_usuario)
+       
 
         # Contenedor para los campos, dividido en columnas
         self.campos_frame = tk.Frame(self.main_frame, bg=COLORES["white"])
@@ -130,7 +131,7 @@ class VistaEditarUsuario:
         
         # Preseleccionar usuario si se especificó
         if username_preseleccionado:
-            self.combo_usuarios.set(username_preseleccionado)
+            self.combo_usuarios.set(username_preseleccionado.get_username())
             self.cargar_datos_usuario(None)
         
         # Panel de botones

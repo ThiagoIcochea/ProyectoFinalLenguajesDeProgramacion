@@ -251,7 +251,10 @@ class VistaAgregarProducto:
             b = int(color_top[2] * (1 - ratio) + color_bottom[2] * ratio)
             draw.line([(0, y), (width, y)], fill=(r, g, b))
         
-        # Guardar imagen temporal
+        # Guardar imagen temporal 
+        # Diego: Wtf osea realiza el gradiente y lo guarda en un archivo temporal? wtfff porque o que xd
+        # pero está bueno y según copilot es para evitar problemas de rendimiento, asi que god, igual Yohaldo
+        # tu lo explicas si el profe pregunta
         gradient_path = os.path.join(self.temp_dir, "gradient_bg.png")
         gradient.save(gradient_path)
         

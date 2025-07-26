@@ -4,6 +4,7 @@ from Vistas.VistaEditarUsuario import VistaEditarUsuario
 
 class VistaVerUsuarios:
     def __init__(self, root, controlador_usuario):
+        self.controlador = controlador_usuario
         self.usuarios = controlador_usuario.listar_usuarios()
         self.win = tk.Toplevel(root)
         self.win.title("Lista de Usuarios")
@@ -83,6 +84,8 @@ class VistaVerUsuarios:
         self.tree.pack(fill="both", expand=True)
 
         self.cargar_datos(self.usuarios)
+        self.tree.bind("<Double-1>", self.editar_usuario)
+
 
     def cargar_datos(self, lista):
         self.tree.delete(*self.tree.get_children())
@@ -102,6 +105,23 @@ class VistaVerUsuarios:
         self.entry_filtro.delete(0, tk.END)
         self.cargar_datos(self.usuarios)
 
+    def editar_usuario(self, event):
+     selected_item = self.tree.selection()
+     if not selected_item:
+        return
+
+     valores = self.tree.item(selected_item)["values"]
+     username = valores[0]  
+
+    
+     usuario_seleccionado = next((u for u in self.usuarios if u.get_username() == username), None)
+
+     if usuario_seleccionado:
+        from Vistas.VistaEditarUsuario import VistaEditarUsuario
+        VistaEditarUsuario(self.win, self.controlador, usuario_seleccionado)
+     else:
+        messagebox.showerror("Error", "No se pudo encontrar el usuario seleccionado.")
+        
     def crear_boton(self, parent, texto, comando, row, col):
         btn = tk.Button(
             parent,
@@ -113,3 +133,4 @@ class VistaVerUsuarios:
             relief="flat"
         )
         btn.grid(row=row, column=col, padx=5, pady=5)
+
