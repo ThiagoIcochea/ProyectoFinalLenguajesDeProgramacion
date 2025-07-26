@@ -48,28 +48,32 @@ class VistaMenu:
         logo_label = tk.Label(self.sidebar, image=self.logo, bg="#273c75")
         logo_label.pack(pady=20)
 
-        # Menú de productos
-        self._crear_menu_desplegable("Productos", [
+        # Menú desplegable
+        
+
+        if self.usuario.get_rol().strip().lower() == "admin":
+            self._crear_menu_desplegable("Productos", [
             ("Agregar producto", self.agregar_producto),
             ("Editar stock", self.editar_stock),
             ("Ver productos", self.ver_productos)
-        ])
-
-        # Menú solo para administradores
-        if self.usuario.get_rol().strip().lower() == "admin":
+            ])
             self._crear_menu_desplegable("Usuarios", [
                 ("Agregar usuario", self.agregar_usuario),
                 ("Ver usuarios", self.ver_usuarios)
             ])
-
-        # Menú de movimientos
-        self._crear_menu_desplegable("Movimientos", [
+            self._crear_menu_desplegable("Movimientos", [
             ("Registrar movimiento", self.registrar_movimiento),
             ("Ver movimientos", self.ver_movimientos)
         ])
 
         # Menú para responsables (reportes y solicitudes)
         if self.usuario.get_rol().strip().lower() == "responsable":
+            self._crear_menu_desplegable("Productos", [
+            ("Ver productos", self.ver_productos),
+            ("Agregar productos", self.agregar_producto),
+            ("Editar stock", self.editar_stock)
+            ])
+            
             self._crear_menu_desplegable("Reportes", [
                 ("Reporte de Stock", self.reporte_stock)
             ])
@@ -77,9 +81,16 @@ class VistaMenu:
                 ("Gestionar solicitudes", self.gestionar_solicitudes),
                 ("Ver solicitudes", self.ver_solicitudes)
             ])
+            self._crear_menu_desplegable("Movimientos", [
+            ("Registrar movimiento", self.registrar_movimiento),
+            ("Ver movimientos", self.ver_movimientos)
+            ])
 
         # Menú para empleados (solo solicitudes)
         if self.usuario.get_rol().strip().lower() == "empleado":
+            self._crear_menu_desplegable("Productos", [
+            ("Ver Productos", self.ver_productos)
+            ])
             self._crear_menu_desplegable("Solicitudes", [
                 ("Solicitar producto", self.solicitar_producto),
                 ("Ver solicitudes", self.ver_solicitudes)
