@@ -1,11 +1,9 @@
 import tkinter as tk
-from tkinter import Menu
-from Controladoras.ControladorProducto import ControladorProducto
-from Controladoras.ControladorMovimiento import ControladorMovimiento
-from Controladoras.ControladorSolicitud import ControladorSolicitud
+from tkinter import ttk
+from PIL import Image, ImageTk, ImageDraw
 
 class VistaMenu:
-    def __init__(self, usuario, controlador_usuario, controlador_producto, controlador_movimiento,controlador_solicitudes):
+    def __init__(self, usuario, controlador_usuario, controlador_producto, controlador_movimiento, controlador_solicitudes):
         self.usuario = usuario
         self.controlador_usuario = controlador_usuario
         self.controlador_producto = controlador_producto
@@ -15,68 +13,123 @@ class VistaMenu:
         self.crearProductos()
 
         self.root = tk.Tk()
-        self.root.title("Gestor de Inventarios")
-        self.root.geometry("800x500")
+        self.root.title("Gestor de Inventarios - Konecta")
+        self.root.geometry("1200x720")
 
-        self._crear_menu()
+        # Configuración de layout principal
+        self.root.grid_rowconfigure(0, weight=1)
+        self.root.grid_columnconfigure(1, weight=1)
 
-        self.label_bienvenida = tk.Label(
-            self.root,
-            text=f"Ten una cordial bienvenida, {usuario.get_nombre()}, al Gestor de Inventarios",
-            font=("Arial", 14),
-            wraplength=600,
-            justify="center"
-        )
-        self.label_bienvenida.pack(expand=True)
+        # Sidebar
+        self.sidebar = tk.Frame(self.root, bg="#273c75", width=350)  # Aumentar ancho del sidebar
+        self.sidebar.grid(row=0, column=0, sticky="ns")
+
+        # Contenido principal
+        self.content = tk.Frame(self.root, bg="white")
+        self.content.grid(row=0, column=1, sticky="nsew")
+
+        self._crear_sidebar()
+        self._mostrar_bienvenida()
 
         self.root.mainloop()
 
-    def _crear_menu(self):
-        menu_bar = Menu(self.root)
+    def _crear_sidebar(self):
+        # Logo según rol
+        logo_path = self._get_logo_path()
+        logo_image = Image.open(logo_path).resize((100, 100), Image.LANCZOS)
+        logo_image = self._convert_to_circle(logo_image)
+        self.logo = ImageTk.PhotoImage(logo_image)
+        logo_label = tk.Label(self.sidebar, image=self.logo, bg="#273c75")
+        logo_label.pack(pady=20)
+
+        # Menú desplegable
+        self._crear_menu_desplegable("Productos", [
+            ("Agregar producto", self.agregar_producto),
+            ("Editar stock", self.editar_stock),
+            ("Ver productos", self.ver_productos)
+        ])
+
+        if self.usuario.get_rol().strip().lower() == "admin":
+            self._crear_menu_desplegable("Usuarios", [
+                ("Agregar usuario", self.agregar_usuario),
+                ("Ver usuarios", self.ver_usuarios)
+            ])
+
+        self._crear_menu_desplegable("Movimientos", [
+            ("Registrar movimiento", self.registrar_movimiento),
+            ("Ver movimientos", self.ver_movimientos)
+        ])
+
+        if self.usuario.get_rol().strip().lower() == "responsable":
+            self._crear_menu_desplegable("Reportes", [
+                ("Reporte de Stock", self.reporte_stock)
+            ])
+            self._crear_menu_desplegable("Solicitudes", [
+                ("Gestionar solicitudes", self.gestionar_solicitudes),
+                ("Ver solicitudes", self.ver_solicitudes)
+            ])
+
+        if self.usuario.get_rol().strip().lower() == "empleado":
+            self._crear_menu_desplegable("Solicitudes", [
+                ("Solicitar producto", self.solicitar_producto),
+                ("Ver solicitudes", self.ver_solicitudes)
+            ])
+
+        # Botón de cerrar sesión al final del sidebar
+        tk.Button(self.sidebar, text="Cerrar sesión", command=self.cerrar_sesion, bg="#dcdde1", fg="#273c75", relief="flat").pack(side="bottom", pady=20)
+
+    def _convert_to_circle(self, image):
+        size = image.size
+        mask = Image.new("L", size, 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0, size[0], size[1]), fill=255)
+        result = Image.new("RGBA", size)
+        result.paste(image, (0, 0), mask)
+        return result
+
+    def _crear_menu_desplegable(self, titulo, opciones):
+        frame = tk.Frame(self.sidebar, bg="#273c75")
+        frame.pack(fill="x", pady=10)  # Más margen entre cada opción
+
+        btn_titulo = tk.Button(frame, text=titulo, bg="#273c75", fg="white", relief="flat", anchor="w")
+        btn_titulo.pack(fill="x")
+
+        subframe = tk.Frame(frame, bg="#273c75")
+
+        def toggle():
+            if subframe.winfo_ismapped():
+                subframe.pack_forget()
+            else:
+                subframe.pack(fill="x")
+
+        btn_titulo.config(command=toggle)
+
+        for label, command in opciones:
+            tk.Button(subframe, text=label, bg="#dcdde1", fg="#273c75", relief="flat", anchor="w", command=command).pack(fill="x")
+
+    def _mostrar_bienvenida(self):
+        label_bienvenida = tk.Label(
+            self.content,
+            text=f"Bienvenido, {self.usuario.get_nombre()} al Gestor de Inventarios",
+            font=("Segoe UI", 16, "bold"),
+            bg="white",
+            fg="#273c75",
+            wraplength=800,
+            justify="center"
+        )
+        label_bienvenida.pack(pady=20)
+
+    def _get_logo_path(self):
         rol = self.usuario.get_rol().strip().lower()
-
-        menu_productos = Menu(menu_bar, tearoff=0)
-        if rol in ["admin", "responsable"]:
-            menu_productos.add_command(label="Agregar producto", command=self.agregar_producto)
-            menu_productos.add_command(label="Editar stock", command=self.editar_stock)
-        menu_productos.add_command(label="Ver productos", command=self.ver_productos)
-        menu_bar.add_cascade(label="Productos", menu=menu_productos)
-
         if rol == "admin":
-            menu_usuarios = Menu(menu_bar, tearoff=0)
-            menu_usuarios.add_command(label="Agregar usuario", command=self.agregar_usuario)
-            menu_usuarios.add_command(label="Ver usuarios", command=self.ver_usuarios)
-            menu_bar.add_cascade(label="Usuarios", menu=menu_usuarios)
+            return "Utils/assets/admin-logo.jpg"
+        elif rol == "responsable":
+            return "Utils/assets/responsable-logo.jpg"
+        elif rol == "empleado":
+            return "Utils/assets/empleado-logo.jpg"
+        return "Utils/assets/default-logo.jpg"
 
-        if rol in ["admin", "responsable"]:
-            menu_mov = Menu(menu_bar, tearoff=0)
-            menu_mov.add_command(label="Registrar movimiento", command=self.registrar_movimiento)
-            menu_mov.add_command(label="Ver movimientos", command=self.ver_movimientos)
-            menu_bar.add_cascade(label="Movimientos", menu=menu_mov)
-
-        if rol == "responsable":
-            menu_reportes = Menu(menu_bar, tearoff=0)
-            menu_reportes.add_command(label="Reporte de Stock", command=self.reporte_stock)
-            menu_bar.add_cascade(label="Reportes", menu=menu_reportes)
-
-            menu_sol_resp = Menu(menu_bar, tearoff=0)
-            menu_sol_resp.add_command(label="Gestionar solicitudes", command=self.gestionar_solicitudes)
-            menu_sol_resp.add_command(label="Ver solicitudes", command=self.ver_solicitudes)
-            menu_bar.add_cascade(label="Solicitudes", menu=menu_sol_resp)
-
-        if rol == "empleado":
-            menu_sol_emp = Menu(menu_bar, tearoff=0)
-            menu_sol_emp.add_command(label="Solicitar producto", command=self.solicitar_producto)
-            menu_sol_emp.add_command(label="Ver solicitudes", command=self.ver_solicitudes)
-            menu_bar.add_cascade(label="Solicitudes", menu=menu_sol_emp)
-            
-
-        menu_usuario = Menu(menu_bar, tearoff=0)
-        menu_usuario.add_command(label="Cerrar sesión", command=self.cerrar_sesion)
-        menu_bar.add_cascade(label=self.usuario.get_nombre(), menu=menu_usuario)
-
-        self.root.config(menu=menu_bar)
-
+    # Métodos de navegación (sin cambios lógicos)
     def agregar_producto(self):
         from Vistas.VistaAgregarProducto import VistaAgregarProducto
         VistaAgregarProducto(self.root, self.controlador_producto)
