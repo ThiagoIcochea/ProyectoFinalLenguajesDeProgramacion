@@ -23,7 +23,7 @@ class VistaLogin:
         self.frame_right.pack(side="right", fill="both", expand=False)
 
         # Imagen en el lado izquierdo
-        self.image = Image.open("Utils/assets/konecta-logo.jpg")  # Cambia la ruta a tu imagen
+        self.image = Image.open('Utils/assets/konecta-logo.jpg')  # Cambia la ruta a tu imagen
         self.image = self.image.resize((300, 300), Image.Resampling.LANCZOS)  # Ajusta el tamaño de la imagen
         self.image_tk = ImageTk.PhotoImage(self.image)
         self.label_image = tk.Label(self.frame_left, image=self.image_tk, bg="#ffffff")
