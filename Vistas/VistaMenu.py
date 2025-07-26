@@ -43,24 +43,30 @@ class VistaMenu:
         logo_label.pack(pady=20)
 
         # Menú desplegable
-        self._crear_menu_desplegable("Productos", [
+        
+
+        if self.usuario.get_rol().strip().lower() == "admin":
+            self._crear_menu_desplegable("Productos", [
             ("Agregar producto", self.agregar_producto),
             ("Editar stock", self.editar_stock),
             ("Ver productos", self.ver_productos)
-        ])
-
-        if self.usuario.get_rol().strip().lower() == "admin":
+            ])
             self._crear_menu_desplegable("Usuarios", [
                 ("Agregar usuario", self.agregar_usuario),
                 ("Ver usuarios", self.ver_usuarios)
             ])
-
-        self._crear_menu_desplegable("Movimientos", [
+            self._crear_menu_desplegable("Movimientos", [
             ("Registrar movimiento", self.registrar_movimiento),
             ("Ver movimientos", self.ver_movimientos)
         ])
 
         if self.usuario.get_rol().strip().lower() == "responsable":
+            self._crear_menu_desplegable("Productos", [
+            ("Ver productos", self.ver_productos),
+            ("Agregar productos", self.agregar_producto),
+            ("Editar stock", self.editar_stock)
+            ])
+            
             self._crear_menu_desplegable("Reportes", [
                 ("Reporte de Stock", self.reporte_stock)
             ])
@@ -68,8 +74,15 @@ class VistaMenu:
                 ("Gestionar solicitudes", self.gestionar_solicitudes),
                 ("Ver solicitudes", self.ver_solicitudes)
             ])
+            self._crear_menu_desplegable("Movimientos", [
+            ("Registrar movimiento", self.registrar_movimiento),
+            ("Ver movimientos", self.ver_movimientos)
+            ])
 
         if self.usuario.get_rol().strip().lower() == "empleado":
+            self._crear_menu_desplegable("Productos", [
+            ("Agregar producto", self.agregar_producto)
+            ])
             self._crear_menu_desplegable("Solicitudes", [
                 ("Solicitar producto", self.solicitar_producto),
                 ("Ver solicitudes", self.ver_solicitudes)
