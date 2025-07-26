@@ -13,6 +13,7 @@ class VistaEditarUsuario:
         self.combo_usuarios = ttk.Combobox(self.win, values=[u.get_username() for u in controlador.listar_usuarios()])
         self.combo_usuarios.pack(pady=5)
         self.combo_usuarios.bind("<<ComboboxSelected>>", self.cargar_datos_usuario)
+       
 
         self.campos = {}
         etiquetas = [
@@ -39,7 +40,7 @@ class VistaEditarUsuario:
             self.campos[clave] = campo
 
         if username_preseleccionado:
-            self.combo_usuarios.set(username_preseleccionado)
+            self.combo_usuarios.set(username_preseleccionado.get_username())
             self.cargar_datos_usuario(None)
 
         tk.Button(self.win, text="Guardar Cambios", command=self.actualizar_usuario).pack(pady=10)

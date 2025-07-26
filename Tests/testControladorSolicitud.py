@@ -13,21 +13,23 @@ class TestControladorSolicitud(unittest.TestCase):
         self.controlador = ControladorSolicitud()
 
     def test_crear_solicitud_valida(self):
-        resultado = self.controlador.crear_solicitud(
-            "S001", "U001", "P001", "2025-07-20", "Pendiente"
+        resultado = self.controlador.registrar_solicitudP(
+            "S001", "U001", "P001",2,"Pendiente", "2025-07-20"
         )
         self.assertTrue(resultado)
-        self.assertIn("S001", self.controlador.solicitudes)
+        ids = [s.get_id() for s in self.controlador.solicitudes]
+        self.assertIn("S001", ids)
 
     def test_crear_solicitud_duplicada(self):
-        self.controlador.crear_solicitud("S001", "U001", "P001", "2025-07-20", "Pendiente")
-        resultado = self.controlador.crear_solicitud("S001", "U001", "P001", "2025-07-20", "Pendiente")
+        self.controlador.registrar_solicitudP("S001", "U001", "P001",2,"Pendiente", "2025-07-20")
+        resultado = self.controlador.registrar_solicitudP("S001", "U001", "P001",2,"Pendiente", "2025-07-20")
         self.assertFalse(resultado)
 
     def test_crear_solicitud_invalida(self):
-        resultado = self.controlador.crear_solicitud(
+        resultado = self.controlador.registrar_solicitudP(
             None, "", "", "", None
         )
+       
         self.assertFalse(resultado)
 
 if __name__ == '__main__':

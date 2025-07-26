@@ -93,6 +93,7 @@ class VistaMenu:
         from Vistas.VistaAgregarUsuario import VistaAgregarUsuario
         VistaAgregarUsuario(self.root, self.controlador_usuario)
 
+
     def ver_usuarios(self):
         from Vistas.VistaVerUsuarios import VistaVerUsuarios
         VistaVerUsuarios(self.root, self.controlador_usuario)
